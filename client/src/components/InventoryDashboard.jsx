@@ -28,7 +28,6 @@ const InventoryDashboard = () => {
     };
     fetchData();
   }, []);
-  // Calculate total values
   const totalMSRP = inventoryData
     ? inventoryData?.reduce((sum, item) => sum + item.price, 0)
     : 0;

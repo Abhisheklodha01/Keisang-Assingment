@@ -8,7 +8,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
-    res.send("Welcome to the Inventory API!");
+    return res.send("Welcome to the Inventory API!");
 })
 
 app.use("/api/inventory", inventoryRoutes);

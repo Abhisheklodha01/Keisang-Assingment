@@ -62,14 +62,12 @@ const InventoryDashboard = () => {
             </p>
           </div>
         </div>
-
-        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Inventory by Make</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={inventoryData.brand}>
+                <BarChart data={inventoryData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="vehicle_make" />
                   <YAxis />
@@ -122,12 +120,12 @@ const InventoryDashboard = () => {
                       <td className="px-4 py-2">
                         <span
                           className={`inline-block px-2 py-1 rounded text-xs ${
-                            item.vehicle_type === "NEW"
+                            item.condition === "NEW"
                               ? "bg-green-100 text-green-800"
                               : "bg-blue-100 text-blue-800"
                           }`}
                         >
-                          {item.vehicle_type}
+                          {item.condition}
                         </span>
                       </td>
                       <td className="px-4 py-2 text-right">

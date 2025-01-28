@@ -5,7 +5,8 @@ import { parsePrice, parseTimestamp } from "../utils/csvParser.js";
 
 export const getInventory = (req, res) => {
   const results = [];
-  const { brand, min_price, max_price, product_type, date_range } = req.query;
+  const { brand, min_price, max_price, product_type, date_range, condition } =
+    req.query;
 
   fs.createReadStream(CSV_FILE_PATH)
     .pipe(csvParser())
@@ -23,8 +24,9 @@ export const getInventory = (req, res) => {
       ) {
         return;
       }
+      const key = Object.keys(row).find((k) => k.trim() === "condition");
       results.push({
-        condition: row.condition,
+        condition: row[key],
         description: row.description,
         title: row.title,
         brand: row.brand,
@@ -35,12 +37,12 @@ export const getInventory = (req, res) => {
       });
     })
     .on("end", () => {
-     if (results.length < 1) {
+      if (results.length < 1) {
         return res.status(404).json({
-            success: true,
-            message: "No matching products found",
-        })
-     }
+          success: true,
+          message: "No matching products found",
+        });
+      }
       return res.status(200).json({
         success: true,
         inventory: results,

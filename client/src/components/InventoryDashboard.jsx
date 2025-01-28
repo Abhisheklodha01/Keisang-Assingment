@@ -9,10 +9,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import axios from "axios";
+import { calculateMake, calculateMSRP } from "../utils/calculation";
 
 const InventoryDashboard = () => {
   const [inventoryData, setInventoryData] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
   const [filter, setFilter] = React.useState("");
   React.useEffect(() => {
     const fetchData = async () => {
@@ -21,10 +21,7 @@ const InventoryDashboard = () => {
           "https://keisang-assingment.onrender.com/api/inventory"
         );
         setInventoryData(data.inventory);
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     fetchData();
   }, []);
@@ -32,7 +29,19 @@ const InventoryDashboard = () => {
     ? inventoryData?.reduce((sum, item) => sum + item.price, 0)
     : 0;
   const totalInventory = inventoryData ? inventoryData.length : 0;
-  console.log(inventoryData);
+  const countByProductType = calculateMake(inventoryData);
+  const formattedCountByProductType = Object.entries(countByProductType).map(
+    ([key, value]) => ({
+      vehicle_make: key,
+      count: value,
+    })
+  );
+
+  const countMSRP = calculateMSRP(inventoryData);
+  const formattedMSRP = Object.entries(countMSRP).map(([key, value]) => ({
+    vehicle_make: key,
+    msrp: value,
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -67,12 +76,12 @@ const InventoryDashboard = () => {
             <h2 className="text-lg font-semibold mb-4">Inventory by Make</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={inventoryData}>
+                <BarChart data={formattedCountByProductType}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="vehicle_make" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="inventory_count" fill="#f97316" />
+                  <Bar dataKey="count" fill="#f97316" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -82,7 +91,7 @@ const InventoryDashboard = () => {
             <h2 className="text-lg font-semibold mb-4">MSRP by Make</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={inventoryData}>
+                <BarChart data={formattedMSRP}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="vehicle_make" />
                   <YAxis />
@@ -94,7 +103,6 @@ const InventoryDashboard = () => {
           </div>
         </div>
 
-        {/* Data Table */}
         <div className="bg-white rounded-lg shadow">
           <div className="p-6">
             <h2 className="text-lg font-semibold mb-4">Inventory Details</h2>
@@ -131,7 +139,15 @@ const InventoryDashboard = () => {
                       <td className="px-4 py-2 text-right">
                         ${item.price?.toLocaleString()}
                       </td>
-                      <td className="px-4 py-2 text-right">{index}</td>
+                      <td className="px-4 py-2 text-right">
+                        {
+                          inventoryData.filter(
+                            (i) =>
+                              i.product_type === item.product_type &&
+                              i.condition === item.condition
+                          ).length
+                        }
+                      </td>
                       <td className="px-4 py-2">
                         {new Date(item.timestamp)?.toLocaleDateString()}
                       </td>

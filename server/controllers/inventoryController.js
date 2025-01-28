@@ -43,7 +43,7 @@ export const getInventory = (req, res) => {
      }
       return res.status(200).json({
         success: true,
-        data: results,
+        inventory: results,
       });
     });
 };

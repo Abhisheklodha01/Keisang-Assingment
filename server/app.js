@@ -1,19 +1,15 @@
-import express from 'express';
-import cors from 'cors'
+import express from "express";
+import cors from "cors";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 
 const app = express();
-app.use(cors({
-    origin: "https://vehicalinventorydashboard.netlify.app",
-    credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
-
-app.get('/', (req, res) => {
-    return res.send("Welcome to the Inventory API!");
-})
+app.get("/", (req, res) => {
+  return res.send("Welcome to the Inventory API!");
+});
 
 app.use("/api/inventory", inventoryRoutes);
 
-export default app
+export default app;

@@ -3,7 +3,10 @@ import cors from 'cors'
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "https://vehicalinventorydashboard.netlify.app/",
+    credentials: true
+}));
 app.use(express.json());
 
 

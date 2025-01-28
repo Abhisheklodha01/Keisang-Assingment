@@ -29,7 +29,9 @@ const InventoryDashboard = () => {
     fetchData();
   }, []);
   // Calculate total values
-  const totalMSRP = inventoryData?.reduce((sum, item) => sum + item.price, 0);
+  const totalMSRP = inventoryData
+    ? inventoryData?.reduce((sum, item) => sum + item.price, 0)
+    : 0;
   const totalInventory = inventoryData ? inventoryData.length : 0;
   console.log(inventoryData);
 
@@ -54,7 +56,10 @@ const InventoryDashboard = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-sm font-medium text-gray-500">Avg. MSRP</h3>
             <p className="text-2xl font-bold mt-2">
-              ${(totalMSRP / inventoryData.length)?.toLocaleString()}
+              $
+              {totalMSRP
+                ? (totalMSRP / inventoryData.length)?.toLocaleString()
+                : 0}
             </p>
           </div>
         </div>
